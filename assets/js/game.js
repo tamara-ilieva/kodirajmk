@@ -62,6 +62,7 @@ let best = readBest();
 let hazards = [];
 let previousTime;
 let accumulator = 0;
+let scheduledFrame;
 
 function readBest() {
   try {
@@ -175,22 +176,27 @@ function frame(time) {
     accumulator -= step;
   }
   draw();
-  if (state === "running") requestAnimationFrame(frame);
+  if (state === "running") scheduledFrame = requestAnimationFrame(frame);
 }
 
 function startGame() {
-  state = "running";
   elapsed = distance = height = score = accumulator = 0;
   velocity = 0;
   previousTime = undefined;
   hazards = [{ x: Math.max(width, 290), sprite: obstacles[0], gap: 235 }];
   scoreLabel.textContent = "00000";
   gameOver.hidden = true;
+  resumeGame();
+}
+
+function resumeGame() {
+  state = "running";
+  previousTime = undefined;
   message.textContent = "Прескокнувај ги пречките!";
   playArea.setAttribute("aria-label", "Скокни");
   playArea.focus({ preventScroll: true });
   playButton.disabled = true;
-  requestAnimationFrame(frame);
+  scheduledFrame = requestAnimationFrame(frame);
 }
 
 function endGame() {
@@ -204,6 +210,10 @@ function endGame() {
 }
 
 function activate(jumpOnStart = false) {
+  if (state === "paused") {
+    resumeGame();
+    return;
+  }
   if (state !== "running") {
     const wasReady = state === "ready";
     startGame();
@@ -213,7 +223,9 @@ function activate(jumpOnStart = false) {
 }
 
 function resize() {
-  width = Math.max(1, Math.round(canvas.getBoundingClientRect().width));
+  const measuredWidth = Math.round(canvas.getBoundingClientRect().width);
+  if (!measuredWidth) return;
+  width = measuredWidth;
   canvas.width = width;
   draw();
 }
@@ -233,6 +245,16 @@ for (const button of [playArea, playButton]) {
 
 playArea.addEventListener("click", () => activate(true));
 playButton.addEventListener("click", () => activate());
+document.querySelector("#frog").addEventListener("arcade:deselect", () => {
+  if (state !== "running") return;
+  cancelAnimationFrame(scheduledFrame);
+  state = "paused";
+  saveBest();
+  message.textContent = "Играта е паузирана.";
+  playArea.setAttribute("aria-label", "Продолжи ја играта");
+  playButton.textContent = "Продолжи";
+  playButton.disabled = false;
+});
 document.addEventListener("visibilitychange", () => { previousTime = undefined; });
 window.addEventListener("pagehide", saveBest);
 reducedMotion.addEventListener("change", draw);
