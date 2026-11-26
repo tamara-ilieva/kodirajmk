@@ -1,0 +1,243 @@
+"use strict";
+
+const canvas = document.querySelector("#scene");
+const context = canvas.getContext("2d");
+const playArea = document.querySelector("#play-area");
+const playButton = document.querySelector("#play-button");
+const gameOver = document.querySelector("#game-over");
+const controls = document.querySelector("#game-controls");
+const message = document.querySelector("#game-message");
+const scoreLabel = document.querySelector("#score");
+const bestLabel = document.querySelector("#best-score");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+const storageKey = "kodiraj.frog-jump.best";
+const ground = 120;
+const frogX = 24;
+const frogSize = { width: 32, height: 24 };
+const step = 1 / 120;
+const ink = "#252922";
+const frogColors = { d: "#285b36", g: "#78b856", l: "#e4efb1", e: ink };
+const frog = [
+  "..dddd....dddd..",
+  "..dgld....dgld..",
+  ".ddglddddddgldd.",
+  ".dgggedgggggedd.",
+  "ddggggggggggggdd",
+  "dgggggeeeegggggd",
+  "dggggggggggggggd",
+  "dggllllllllllggd",
+  "ddggllllllllggdd",
+  ".dggggggggggggd.",
+  "ddggddddddggdddd",
+  "ddddd....dddddd."
+];
+
+const obstacles = [
+  {
+    pixels: ["..#...#..", "...#.#...", "..#####..", "#.##.##.#", ".#######.", "..##.##..", ".#######.", "#.#####.#", "..#...#.."],
+    width: 18, height: 18
+  },
+  {
+    pixels: ["....####...", "..########.", ".###.######", "####..#####", "###########", "###########"],
+    width: 22, height: 12
+  },
+  {
+    pixels: ["....#...#....", "...#....#.#..", "..#....#...#.", ".#.....#....#", "..#...#....#.", "...#..#...#..", "....##...#..."],
+    width: 26, height: 14
+  }
+];
+const cloud = [".....#####.....", "...##.....##...", ".##.........##.", "###############"];
+const clouds = [{ x: 0.28, y: 26 }, { x: 0.76, y: 14 }];
+const monochrome = { "#": ink };
+
+let width = canvas.width;
+let state = "ready";
+let height = 0;
+let velocity = 0;
+let elapsed = 0;
+let distance = 0;
+let score = 0;
+let best = readBest();
+let hazards = [];
+let previousTime;
+let accumulator = 0;
+
+function readBest() {
+  try {
+    const stored = Number(localStorage.getItem(storageKey));
+    return Number.isSafeInteger(stored) && stored > 0 ? stored : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function updateScore() {
+  const nextScore = Math.floor(elapsed * 10);
+  if (nextScore === score) return;
+
+  score = nextScore;
+  scoreLabel.textContent = String(score).padStart(5, "0");
+  if (score > best) {
+    best = score;
+    bestLabel.textContent = String(best).padStart(5, "0");
+  }
+}
+
+function saveBest() {
+  try {
+    best = Math.max(best, readBest());
+    localStorage.setItem(storageKey, String(best));
+    bestLabel.textContent = String(best).padStart(5, "0");
+  } catch {
+    // The in-memory record is still available if browser storage is blocked.
+  }
+}
+
+function drawSprite(pixels, x, y, palette, scale = 2) {
+  const left = Math.round(x);
+  const top = Math.round(y);
+  pixels.forEach((row, rowIndex) => {
+    for (let column = 0; column < row.length; column += 1) {
+      const color = palette[row[column]];
+      if (!color) continue;
+      context.fillStyle = color;
+      context.fillRect(left + column * scale, top + rowIndex * scale, scale, scale);
+    }
+  });
+}
+
+function wrap(value, period) {
+  return ((value % period) + period) % period;
+}
+
+function draw() {
+  context.clearRect(0, 0, width, canvas.height);
+  const cloudOffset = reducedMotion.matches ? 0 : elapsed * 12;
+  for (const { x, y } of clouds) {
+    drawSprite(cloud, wrap(x * width + 32 - cloudOffset, width + 32) - 32, y, { "#": "#c4c9c0" });
+  }
+
+  context.fillStyle = ink;
+  context.fillRect(0, ground, width, 1);
+  context.fillStyle = "#aeb4a9";
+  const groundOffset = reducedMotion.matches ? 0 : distance;
+  for (let x = -Math.floor(groundOffset % 53); x < width; x += 53) {
+    context.fillRect(x, ground + 5, 4, 1);
+    context.fillRect(x + 19, ground + 9, 2, 1);
+  }
+
+  drawSprite(frog, frogX, ground - frogSize.height - height, frogColors);
+  const scenery = state === "ready"
+    ? [{ x: width * 0.65, sprite: obstacles[0] }, { x: width * 0.86, sprite: obstacles[1] }]
+    : hazards;
+  for (const { x, sprite } of scenery) {
+    drawSprite(sprite.pixels, x, ground - sprite.height, monochrome);
+  }
+}
+
+function touchesFrog({ x, sprite }) {
+  // Inset the visible sprites so a near miss at an empty corner is forgiving.
+  return frogX + frogSize.width - 4 > x + 2
+    && frogX + 4 < x + sprite.width - 2
+    && height + 2 < sprite.height - 2;
+}
+
+function simulate() {
+  elapsed += step;
+  const speed = Math.min(390, 190 + elapsed * 5);
+  distance += speed * step;
+  if (height > 0 || velocity > 0) {
+    velocity -= 1250 * step;
+    height = Math.max(0, height + velocity * step);
+    if (height === 0) velocity = 0;
+  }
+
+  for (const hazard of hazards) hazard.x -= speed * step;
+  hazards = hazards.filter(({ x, sprite }) => x + sprite.width > 0);
+  const last = hazards.at(-1);
+  if (!last || width - last.x >= last.gap) {
+    const sprite = obstacles[Math.floor(Math.random() * obstacles.length)];
+    const gap = speed * (0.99 + Math.random() * 0.42) + sprite.width;
+    hazards.push({ x: width, sprite, gap });
+  }
+
+  updateScore();
+  if (hazards.some(touchesFrog)) endGame();
+}
+
+function frame(time) {
+  if (state !== "running") return;
+  accumulator += Math.min(0.05, (time - (previousTime ?? time)) / 1000);
+  previousTime = time;
+  while (accumulator >= step && state === "running") {
+    simulate();
+    accumulator -= step;
+  }
+  draw();
+  if (state === "running") requestAnimationFrame(frame);
+}
+
+function startGame() {
+  state = "running";
+  elapsed = distance = height = score = accumulator = 0;
+  velocity = 0;
+  previousTime = undefined;
+  hazards = [{ x: Math.max(width, 290), sprite: obstacles[0], gap: 235 }];
+  scoreLabel.textContent = "00000";
+  gameOver.hidden = true;
+  message.textContent = "Прескокнувај ги пречките!";
+  playArea.setAttribute("aria-label", "Скокни");
+  playArea.focus({ preventScroll: true });
+  playButton.disabled = true;
+  requestAnimationFrame(frame);
+}
+
+function endGame() {
+  state = "over";
+  saveBest();
+  gameOver.hidden = false;
+  message.textContent = `Game over! И програмерите понекогаш наидуваат на багови. Поени: ${score}.`;
+  playArea.setAttribute("aria-label", "Играј повторно");
+  playButton.textContent = "Играј повторно";
+  playButton.disabled = false;
+}
+
+function activate(jumpOnStart = false) {
+  if (state !== "running") {
+    const wasReady = state === "ready";
+    startGame();
+    if (!wasReady || !jumpOnStart) return;
+  }
+  if (height === 0 && velocity === 0) velocity = 360;
+}
+
+function resize() {
+  width = Math.max(1, Math.round(canvas.getBoundingClientRect().width));
+  canvas.width = width;
+  draw();
+}
+
+// Controls are scoped to the two game buttons so Space and arrows can scroll elsewhere.
+for (const button of [playArea, playButton]) {
+  button.addEventListener("keydown", (event) => {
+    const isJump = event.code === "Space" || event.code === "ArrowUp";
+    const isEnter = event.code === "Enter";
+    if (!isJump && !isEnter) return;
+    event.preventDefault();
+    if (event.repeat) return;
+    if (isJump) activate(button === playArea);
+    else if (state !== "running") activate();
+  });
+}
+
+playArea.addEventListener("click", () => activate(true));
+playButton.addEventListener("click", () => activate());
+document.addEventListener("visibilitychange", () => { previousTime = undefined; });
+window.addEventListener("pagehide", saveBest);
+reducedMotion.addEventListener("change", draw);
+new ResizeObserver(resize).observe(canvas);
+
+bestLabel.textContent = String(best).padStart(5, "0");
+playArea.hidden = controls.hidden = playButton.hidden = false;
+resize();

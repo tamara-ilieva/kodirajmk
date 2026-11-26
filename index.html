@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="mk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kodiraj.mk — Македонска платформа за програмирање</title>
+  <meta name="description" content="Учи. Практикувај. Создавај. Наскоро на kodiraj.mk, македонска платформа за самостојно учење програмирање и технологија.">
+  <link rel="canonical" href="https://kodiraj.mk/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="mk_MK">
+  <meta property="og:site_name" content="kodiraj.mk">
+  <meta property="og:title" content="kodiraj.mk — Учи. Практикувај. Создавај.">
+  <meta property="og:description" content="Наскоро доаѓа македонска платформа за самостојно учење програмирање и технологија. Дотогаш, пробај ја Frog Jump!">
+  <meta property="og:url" content="https://kodiraj.mk/">
+  <meta property="og:image" content="https://kodiraj.mk/assets/images/social.png">
+  <meta property="og:image:alt" content="Зелена пикселска жаба од Frog Jump покрај логото на kodiraj.mk.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/game.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <h1><img src="assets/images/wordmark.svg" alt="kodiraj.mk" width="407" height="57"></h1>
+      <p class="status" lang="en">COMING SOON</p>
+      <p class="tagline">Учи. Практикувај. Создавај.</p>
+      <p class="description">Македонска платформа за самостојно учење програмирање и технологија.</p>
+    </header>
+
+    <section class="game" aria-labelledby="game-title">
+      <header class="game-header">
+        <h2 id="game-title" lang="en">Frog Jump</h2>
+        <div class="scores">
+          <span>Рекорд <strong id="best-score">00000</strong></span>
+          <span>Поени <strong id="score">00000</strong></span>
+        </div>
+      </header>
+      <div class="arena">
+        <canvas id="scene" width="720" height="142" aria-hidden="true"></canvas>
+        <p class="game-over" id="game-over" lang="en" aria-hidden="true" hidden>GAME OVER</p>
+        <button class="play-area" id="play-area" type="button" aria-label="Започни Frog Jump" aria-describedby="game-message game-controls" hidden></button>
+      </div>
+      <p class="game-message" id="game-message" role="status">Додека ја подготвуваме платформата, обиди се да ги прескокнеш сите багови!</p>
+      <div class="game-actions">
+        <p id="game-controls" hidden><kbd>Space</kbd> <kbd>↑</kbd><span> или допир за скок</span></p>
+        <button id="play-button" type="button" hidden>Играј</button>
+      </div>
+      <noscript><p>Вклучи JavaScript за да ја играш Frog Jump.</p></noscript>
+    </section>
+
+    <section class="topics" aria-labelledby="topics-title">
+      <h2 id="topics-title">Што те очекува?</h2>
+      <ul>
+        <li>Python – основи и напредно програмирање</li>
+        <li>Artificial Intelligence &amp; Machine Learning</li>
+        <li>Game Development со Pygame</li>
+        <li>C++ и алгоритми</li>
+        <li>Детални лекции и практични примери</li>
+        <li>Интерактивни задачи и квизови</li>
+      </ul>
+    </section>
+  </main>
+  <footer class="footer"><small>© 2026 kodiraj.mk</small></footer>
+</body>
+</html>
