@@ -237,3 +237,4 @@ function setupTrail() {
 setupPairs();
 setupTrail();
 for (const choice of choices) choice.hidden = false;
+if (["#frog", "#space"].includes(window.location.hash)) choices.find((choice) => choice.dataset.game === "frog")?.click();

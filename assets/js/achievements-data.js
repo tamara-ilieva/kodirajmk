@@ -1,0 +1,20 @@
+window.KodirajAwards = [
+  ["personal", "Personal Space", "The frog would like a little room.", "frog", "Ten mascot presses", "common", "Even mascots have boundaries."],
+  ["king", "Frog King", "A golden crown for a thousand points.", "crown", "A Frog Jump score of 1000", "rare", "A four-digit leap."],
+  ["professional", "Professional Bug", "Some bugs are remarkably consistent.", "bug", "Five separate first-obstacle collisions", "uncommon"],
+  ["night", "Night Owl", "You met the frog in its pajamas.", "moon", "A run started during the local 00:00–03:59 window", "rare"],
+  ["whisper", "Frog Whisperer", "The frogs heard you.", "frog", "The frogs hear their call", "common", "Listen to the pond."],
+  ["gravity", "Gravity Not Found", "The frog took the scenic route up.", "star", "The terminal launches a floating frog", "uncommon"],
+  ["afk", "AFK Developer", "Even developers need a nap.", "moon", "Two idle minutes on the visible homepage", "uncommon"],
+  ["coffee", "Caffeine Driven", "One pixel cup, freshly brewed.", "cup", "Order coffee in the terminal", "common"],
+  ["hello", "Hello World", "Every developer starts somewhere.", "terminal", "Send the classic greeting", "common"],
+  ["addict", "Terminal Addict", "Twenty commands later, the menu is still there.", "terminal", "Execute twenty terminal inputs", "uncommon"],
+  ["retro", "Retro Gamer", "You found the old green monitor.", "screen", "Activate CRT mode", "uncommon", "Old controllers knew a trick."],
+  ["matrix", "The Matrix", "You saw the pixels behind the pixels.", "screen", "Activate the digital rain", "uncommon"],
+  ["hunter", "Bug Hunter", "You fixed all the bugs. Almost.", "bug", "Catch all ten bugs in one round", "uncommon"],
+  ["python", "Python Unlocked", "A frog, a snake, and a new high score to chase.", "snake", "Discover the homepage Snake game", "uncommon"],
+  ["space", "Frog in Space", "One small hop for a frog.", "star", "Discover the star on the homepage", "rare"],
+  ["curious", "Curious Developer", "You did something with a clue you found.", "key", "Submit the first clue as a developer-room check-in", "rare"],
+  ["explorer", "Secret Explorer", "You put the three clues together.", "key", "Open the developer room", "rare"],
+  ["master", "Secret Master", "The universe still has room for one more secret.", "crown", "Unlock the other seventeen initial achievements", "legendary"]
+].map(([id, name, description, icon, condition, rarity, clue]) => ({ id, name, description, icon, condition, rarity, clue }));

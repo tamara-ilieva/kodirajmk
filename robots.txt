@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+# Frogs are allowed. Bugs are not.

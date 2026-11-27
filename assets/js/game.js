@@ -11,7 +11,8 @@ const scoreLabel = document.querySelector("#score");
 const bestLabel = document.querySelector("#best-score");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-const storageKey = "kodiraj.frog-jump.best";
+const standardKey = "kodiraj.frog-jump.best";
+const spaceKey = "kodiraj.secrets.space.best";
 const ground = 120;
 const frogX = 24;
 const frogSize = { width: 32, height: 24 };
@@ -49,9 +50,14 @@ const obstacles = [
 ];
 const cloud = [".....#####.....", "...##.....##...", ".##.........##.", "###############"];
 const clouds = [{ x: 0.28, y: 26 }, { x: 0.76, y: 14 }];
-const monochrome = { "#": ink };
+const crown = ["#.#.#", "#####", ".###."];
+const star = ["..#..", ".###.", "#####", ".###.", "..#.."];
+const hat = [".....##.", "...###.#", "..####..", "#######."];
 
 let width = canvas.width;
+let mode = "classic";
+let night = false;
+let kingUnlocked = window.KodirajSecrets?.has("king") ?? false;
 let state = "ready";
 let height = 0;
 let velocity = 0;
@@ -59,14 +65,17 @@ let elapsed = 0;
 let distance = 0;
 let score = 0;
 let best = readBest();
+const sessionBests = { classic: best, space: 0 };
 let hazards = [];
 let previousTime;
 let accumulator = 0;
 let scheduledFrame;
 
-function readBest() {
+function scoreKey() { return mode === "space" ? spaceKey : standardKey; }
+
+function readBest(key = scoreKey()) {
   try {
-    const stored = Number(localStorage.getItem(storageKey));
+    const stored = Number(localStorage.getItem(key));
     return Number.isSafeInteger(stored) && stored > 0 ? stored : 0;
   } catch {
     return 0;
@@ -77,18 +86,24 @@ function updateScore() {
   const nextScore = Math.floor(elapsed * 10);
   if (nextScore === score) return;
 
+  const earnedCrown = nextScore >= 1000 && best < 1000;
   score = nextScore;
   scoreLabel.textContent = String(score).padStart(5, "0");
   if (score > best) {
     best = score;
     bestLabel.textContent = String(best).padStart(5, "0");
   }
+  if (earnedCrown) {
+    saveBest();
+    document.dispatchEvent(new CustomEvent("kodiraj:frog-score", { detail: score }));
+  }
 }
 
 function saveBest() {
+  sessionBests[mode] = best;
   try {
     best = Math.max(best, readBest());
-    localStorage.setItem(storageKey, String(best));
+    localStorage.setItem(scoreKey(), String(best));
     bestLabel.textContent = String(best).padStart(5, "0");
   } catch {
     // The in-memory record is still available if browser storage is blocked.
@@ -114,12 +129,14 @@ function wrap(value, period) {
 
 function draw() {
   context.clearRect(0, 0, width, canvas.height);
+  const retro = document.documentElement.dataset.theme === "retro";
+  const sceneryInk = retro ? "#b9ed99" : ink;
   const cloudOffset = reducedMotion.matches ? 0 : elapsed * 12;
   for (const { x, y } of clouds) {
-    drawSprite(cloud, wrap(x * width + 32 - cloudOffset, width + 32) - 32, y, { "#": "#c4c9c0" });
+    drawSprite(mode === "space" ? star : cloud, wrap(x * width + 32 - cloudOffset, width + 32) - 32, y, { "#": retro ? "#63825b" : "#c4c9c0" });
   }
 
-  context.fillStyle = ink;
+  context.fillStyle = sceneryInk;
   context.fillRect(0, ground, width, 1);
   context.fillStyle = "#aeb4a9";
   const groundOffset = reducedMotion.matches ? 0 : distance;
@@ -128,12 +145,34 @@ function draw() {
     context.fillRect(x + 19, ground + 9, 2, 1);
   }
 
-  drawSprite(frog, frogX, ground - frogSize.height - height, frogColors);
+  const frogY = ground - frogSize.height - height;
+  const costume = retro ? { d: "#416946", g: "#85b66d", l: "#c5eea0", e: "#17251a" }
+    : night ? { ...frogColors, d: "#414f6e", g: "#8794ba" } : frogColors;
+  drawSprite(frog, frogX, frogY, costume);
+  if (night && mode !== "space") {
+    drawSprite(hat, frogX + 3, frogY - 7, { "#": retro ? "#b5df96" : "#646d93" });
+    context.fillStyle = retro ? "#496c48" : "#596788";
+    for (const offset of [8, 14, 20]) context.fillRect(frogX + offset, Math.round(frogY) + 16, 2, 4);
+  }
+  if (mode === "space") {
+    context.strokeStyle = sceneryInk;
+    context.strokeRect(frogX - 2.5, Math.round(frogY) - 3.5, 36, 27);
+    context.fillStyle = "#c4c9c0";
+    context.fillRect(frogX, Math.round(frogY) + 24, 32, 3);
+  }
+  if (document.documentElement.classList.contains("matrix-mode")) {
+    context.fillStyle = ink;
+    for (const offset of [4, 18]) context.fillRect(frogX + offset, Math.round(frogY) + 4, 10, 5);
+    context.fillRect(frogX + 12, Math.round(frogY) + 5, 7, 2);
+  }
+  if (kingUnlocked || (mode === "classic" && best >= 1000)) {
+    drawSprite(crown, frogX + 11, frogY - 10, { "#": retro ? "#b5df96" : "#bc8718" });
+  }
   const scenery = state === "ready"
     ? [{ x: width * 0.65, sprite: obstacles[0] }, { x: width * 0.86, sprite: obstacles[1] }]
     : hazards;
   for (const { x, sprite } of scenery) {
-    drawSprite(sprite.pixels, x, ground - sprite.height, monochrome);
+    drawSprite(sprite.pixels, x, ground - sprite.height, { "#": sceneryInk });
   }
 }
 
@@ -149,7 +188,7 @@ function simulate() {
   const speed = Math.min(390, 190 + elapsed * 5);
   distance += speed * step;
   if (height > 0 || velocity > 0) {
-    velocity -= 1250 * step;
+    velocity -= (mode === "space" ? 780 : 1250) * step;
     height = Math.max(0, height + velocity * step);
     if (height === 0) velocity = 0;
   }
@@ -164,7 +203,8 @@ function simulate() {
   }
 
   updateScore();
-  if (hazards.some(touchesFrog)) endGame();
+  const collision = hazards.find(touchesFrog);
+  if (collision) endGame(Boolean(collision.first));
 }
 
 function frame(time) {
@@ -183,9 +223,12 @@ function startGame() {
   elapsed = distance = height = score = accumulator = 0;
   velocity = 0;
   previousTime = undefined;
-  hazards = [{ x: Math.max(width, 290), sprite: obstacles[0], gap: 235 }];
+  hazards = [{ x: Math.max(width, 290), sprite: obstacles[0], gap: 235, first: true }];
+  const hour = new Date().getHours();
+  night = hour < 4;
   scoreLabel.textContent = "00000";
   gameOver.hidden = true;
+  document.dispatchEvent(new CustomEvent("kodiraj:frog-start", { detail: { night, mode } }));
   resumeGame();
 }
 
@@ -199,7 +242,7 @@ function resumeGame() {
   scheduledFrame = requestAnimationFrame(frame);
 }
 
-function endGame() {
+function endGame(first) {
   state = "over";
   saveBest();
   gameOver.hidden = false;
@@ -207,6 +250,7 @@ function endGame() {
   playArea.setAttribute("aria-label", "Играј повторно");
   playButton.textContent = "Играј повторно";
   playButton.disabled = false;
+  document.dispatchEvent(new CustomEvent("kodiraj:frog-collision", { detail: { first, mode } }));
 }
 
 function activate(jumpOnStart = false) {
@@ -243,7 +287,14 @@ for (const button of [playArea, playButton]) {
   });
 }
 
-playArea.addEventListener("click", () => activate(true));
+playArea.addEventListener("click", (event) => {
+  const bounds = playArea.getBoundingClientRect();
+  const x = event.clientX - bounds.left, y = event.clientY - bounds.top;
+  if (event.detail && x >= frogX && x <= frogX + frogSize.width && y >= ground - height - frogSize.height && y <= ground - height) {
+    document.dispatchEvent(new Event("kodiraj:frog-press"));
+  }
+  activate(true);
+});
 playButton.addEventListener("click", () => activate());
 document.querySelector("#frog").addEventListener("arcade:deselect", () => {
   if (state !== "running") return;
@@ -258,6 +309,31 @@ document.querySelector("#frog").addEventListener("arcade:deselect", () => {
 document.addEventListener("visibilitychange", () => { previousTime = undefined; });
 window.addEventListener("pagehide", saveBest);
 reducedMotion.addEventListener("change", draw);
+document.addEventListener("kodiraj:theme", draw);
+document.addEventListener("kodiraj:awards", () => {
+  kingUnlocked = window.KodirajSecrets?.has("king") ?? false;
+  if (state !== "running") draw();
+});
+document.addEventListener("kodiraj:matrix", () => { if (state !== "running") draw(); });
+document.addEventListener("kodiraj:frog-mode", (event) => {
+  const nextMode = event.detail;
+  if (!["classic", "space"].includes(nextMode) || nextMode === mode || (nextMode === "space" && !window.KodirajSecrets?.has("space"))) return;
+  saveBest();
+  cancelAnimationFrame(scheduledFrame);
+  mode = nextMode;
+  state = "ready";
+  height = elapsed = distance = score = 0;
+  night = false;
+  best = Math.max(sessionBests[mode], readBest());
+  scoreLabel.textContent = "00000";
+  bestLabel.textContent = String(best).padStart(5, "0");
+  gameOver.hidden = true;
+  playArea.setAttribute("aria-label", "Започни Frog Jump");
+  playButton.textContent = "Играј";
+  playButton.disabled = false;
+  message.textContent = mode === "space" ? "Frog in Space · Помала гравитација, поголеми скокови." : "Додека ја подготвуваме платформата, обиди се да ги прескокнеш сите багови!";
+  draw();
+});
 new ResizeObserver(resize).observe(canvas);
 
 bestLabel.textContent = String(best).padStart(5, "0");

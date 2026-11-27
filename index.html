@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>kodiraj.mk — Македонска платформа за програмирање</title>
-  <meta name="description" content="Учи. Практикувај. Создавај. Наскоро на kodiraj.mk, македонска платформа за самостојно учење програмирање и технологија.">
+  <meta name="description" content="Бесплатна македонска иницијатива за програмирање и технологија. Истражи ги курсевите во подготовка, мини игрите, квизот и дневниот предизвик.">
   <link rel="canonical" href="https://kodiraj.mk/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="mk_MK">
@@ -16,15 +16,25 @@
   <meta property="og:image:alt" content="Зелена пикселска жаба од Frog Jump покрај логото на kodiraj.mk.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="assets/css/style.css?v=20261127">
-  <script src="assets/js/game.js?v=20261127" defer></script>
+  <link rel="stylesheet" href="assets/css/v2.css?v=2.0">
+  <link rel="stylesheet" href="assets/css/easter-eggs.css?v=secret1">
+  <script src="assets/js/site.js?v=secret1" defer></script>
+  <script src="assets/js/achievements-data.js?v=secret1" defer></script>
+  <script src="assets/js/achievements.js?v=secret1" defer></script>
+  <script src="assets/js/themes.js?v=secret1" defer></script>
+  <script src="assets/js/easter-eggs.js?v=secret1" defer></script>
+  <script src="assets/js/snake-game.js?v=secret1" defer></script>
+  <script src="assets/js/game.js?v=secret1" defer></script>
+  <script src="assets/js/space-mode.js?v=secret1" defer></script>
 </head>
-<body>
+<body data-page="home">
+  <!-- Hello, curious developer. Future contributor, perhaps? Clue 2: FROG -->
   <main class="page">
-    <nav class="home-menu" aria-label="Навигација">
+    <div data-site-nav><nav class="site-nav" aria-label="Главна навигација">
       <a class="menu-link" href="games.html">Мини игри</a>
-    </nav>
+    </nav></div>
     <header class="intro">
-      <h1><img src="assets/images/wordmark.svg" alt="kodiraj.mk" width="407" height="57"></h1>
+      <h1><img data-logo src="assets/images/wordmark.svg" alt="kodiraj.mk" width="407" height="57"></h1>
       <p class="status" lang="en">COMING SOON</p>
       <p class="tagline">Учи. Практикувај. Создавај.</p>
       <p class="description">Македонска платформа за самостојно учење програмирање и технологија.</p>
@@ -51,6 +61,19 @@
       <noscript><p>Вклучи JavaScript за да ја играш Frog Jump.</p></noscript>
     </section>
 
+    <section class="snake-game" id="snake-game" aria-labelledby="snake-title" hidden>
+      <h2 id="snake-title" lang="en">Snake</h2>
+      <p data-snake-score></p>
+      <canvas width="192" height="144" tabindex="0" aria-label="Табла за Snake. Користи ги стрелките за движење."></canvas>
+      <div class="snake-buttons" role="group" aria-label="Насока">
+        <button type="button" class="arcade-button" data-snake-direction="ArrowUp" aria-label="Горе">↑</button>
+        <button type="button" class="arcade-button" data-snake-direction="ArrowLeft" aria-label="Лево">←</button>
+        <button type="button" class="arcade-button" data-snake-direction="ArrowDown" aria-label="Долу">↓</button>
+        <button type="button" class="arcade-button" data-snake-direction="ArrowRight" aria-label="Десно">→</button>
+      </div>
+      <p data-snake-status role="status"></p>
+      <button type="button" class="arcade-button" data-snake-play>Играј</button>
+    </section>
     <section class="topics" aria-labelledby="topics-title">
       <h2 id="topics-title">Што те очекува?</h2>
       <ul>

@@ -48,7 +48,6 @@ button:focus-visible { outline: 2px dashed var(--green); outline-offset: 4px; }
 .tagline { font-size: clamp(1.25rem, 3.7vw, 1.625rem); font-weight: 750; }
 .description { max-width: 35rem; margin: .45rem auto 0; color: var(--muted); }
 .page { position: relative; }
-.home-menu { position: absolute; inset: .2rem 0 auto auto; }
 .menu-link {
   display: inline-flex;
   align-items: center;
