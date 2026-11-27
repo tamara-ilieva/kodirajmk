@@ -99,6 +99,7 @@
       feedback.focus();
       updateHistory(sessionProgress, today);
       unlock("daily");
+      window.umami?.track("daily_challenge_submitted");
     });
     host.replaceChildren(title, form, feedback);
     updateHistory(progress, today);

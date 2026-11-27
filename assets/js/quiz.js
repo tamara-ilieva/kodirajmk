@@ -61,7 +61,10 @@
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       answers[index++] = new FormData(form).get("profile");
-      if (index === questions.length) renderResult();
+      if (index === questions.length) {
+        renderResult();
+        window.umami?.track("quiz_completed");
+      }
       else renderQuestion(true);
     });
     host.replaceChildren(form);

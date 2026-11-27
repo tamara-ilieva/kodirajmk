@@ -34,10 +34,12 @@
   result.setAttribute("aria-atomic", "true");
   result.hidden = true;
   button.addEventListener("click", () => {
+    const firstRun = result.hidden;
     result.hidden = false;
     result.replaceChildren(element("p", page === "web" ? "Симулиран приказ" : "Симулиран излез", "fine-print"));
     if (page === "web") result.append(element("h3", "Coming soon..."), element("p", "Учи. Практикувај. Создавај."));
     else result.append(element("pre", output, "code"));
+    if (firstRun) window.umami?.track("course_preview_run");
   });
   host.append(element("h2", "Преглед на код"), pre, button, result);
   document.querySelector("#planned-courses").append(...courses.map((course) => element("li", course)));

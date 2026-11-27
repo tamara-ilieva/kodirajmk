@@ -14,11 +14,13 @@ picker.addEventListener("click", (event) => {
     previous.hidden = true;
     selected.setAttribute("aria-expanded", "false");
   }
+  const selectionChanged = selected !== choice;
   selected = choice;
   const panel = document.getElementById(choice.dataset.game);
   panel.hidden = false;
   choice.setAttribute("aria-expanded", "true");
   document.getElementById(panel.getAttribute("aria-labelledby")).focus();
+  if (selectionChanged) window.umami?.track("arcade_game_opened", { game: choice.dataset.game });
 });
 
 const pairSprites = [
