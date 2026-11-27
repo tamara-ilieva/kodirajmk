@@ -38,7 +38,7 @@
     count() {
       const commandCount = counter("commands");
       if (commandCount >= 20) grant("addict");
-      return commandCount % 5 === 0;
+      return commandCount % 10 === 0;
     }
   };
 })();

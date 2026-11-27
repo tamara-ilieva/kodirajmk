@@ -8,10 +8,23 @@
   const saved = read(historyKey, []);
   const commands = Array.isArray(saved) ? saved.filter((item) => typeof item === "string").slice(-50) : [];
   const names = ["help", "ls", "cd", "whoami", "sudo", "frog", "challenge", "quiz", "random", "joke", "theme", "history", "clear", "exit"];
+  const menuHints = [
+    "You know you can use the menu, right?",
+    "The menu is starting to feel left out.",
+    "The frog uses the menu. The frog won't admit it.",
+    "Plot twist: the links at the top actually work.",
+    "Your keyboard called. It wants a coffee break.",
+    "The menu is right there, pretending it hasn't noticed you.",
+    "One click. Zero typos. The menu makes a decent case.",
+    "The frog tried clicking a link once. Nothing exploded.",
+    "At this point, the terminal should start charging rent.",
+    "Somewhere above this terminal, a perfectly good menu awaits."
+  ];
   const aliases = { "/": "home", "..": "home", "index.html": "home", "games.html": "games", challenge: "challenges", "c++": "cpp" };
   let cursor = commands.length;
   let draft = "";
   let lastCompletion = "";
+  let lastMenuHint;
   input.maxLength = 160;
 
   function print(...parts) {
@@ -72,7 +85,12 @@
       if (Object.hasOwn(demos, name)) demos[name](args.join(" "));
       else print("Непозната команда. Напиши help.");
     }
-    if (showMenuHint) print("You know you can use the menu, right?");
+    if (showMenuHint) {
+      const choices = menuHints.filter((hint) => hint !== lastMenuHint);
+      const hint = choices[Math.floor(Math.random() * choices.length)];
+      lastMenuHint = hint;
+      setTimeout(() => print(hint), 800);
+    }
     if (!document.activeElement.closest(".bug-panel")) input.focus({ preventScroll: true });
   });
   input.addEventListener("input", () => { lastCompletion = ""; });
