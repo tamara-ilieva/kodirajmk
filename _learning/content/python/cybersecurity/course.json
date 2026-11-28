@@ -1,0 +1,18 @@
+{
+  "slug": "cybersecurity",
+  "title": "Python for Cybersecurity",
+  "description": "Python за одбранбена сајбербезбедност.",
+  "order": 9,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Анализа на дневници и автоматизација на одбранбени проверки."
+  ],
+  "outline": [
+    "Дневници",
+    "Следење",
+    "Одбранбени проверки"
+  ]
+}

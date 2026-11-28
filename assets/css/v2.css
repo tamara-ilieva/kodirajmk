@@ -38,7 +38,19 @@ fieldset { border:0; padding:0; margin:0; min-width:0; }
 legend { font-weight:700; }
 .achievement-toast { position:fixed; inset:auto max(1rem, env(safe-area-inset-right)) 1rem auto; max-width:calc(100% - 2rem); border:1px solid var(--green); background:var(--paper); color:var(--green); padding:.55rem .8rem; font:700 .875rem var(--mono); z-index:3; pointer-events:none; }
 .frog-404 { width:72px; height:72px; image-rendering:pixelated; margin-top:1rem; }
-:root[data-theme="retro"] { color-scheme:dark; --paper:#111e15; --ink:#e2f1d9; --muted:#b2c5ae; --green:#a7da8d; --line:#516751; }
+:root[data-theme="retro"] {
+  color-scheme: dark;
+  --paper: #141a18;
+  --ink: #e3ebe6;
+  --muted: #a8b8af;
+  --green: #a0dfba;
+  --line: #50635a;
+  --dark-panel: #1c2521;
+  --dark-code: #101713;
+}
+[data-theme="retro"] :is(.terminal, .site-nav ul) { background: var(--dark-panel); }
+[data-theme="retro"] .terminal-entry input { background: var(--dark-code); }
+[data-theme="retro"] .token-keyword { color: #d9b8fa; }
 [data-theme="retro"] .intro img { filter:invert(1); }
 [data-theme="retro"] .pairs-board [data-face="matched"], [data-theme="retro"] .trail-board button { background-color:#283d29; }
 @media (max-width:37rem) { .site-nav { gap:0 .7rem; } }

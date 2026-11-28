@@ -1,0 +1,18 @@
+{
+  "slug": "advanced",
+  "title": "Python Advanced",
+  "description": "Напредна работа со јазикот и одржлив Python код.",
+  "order": 2,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Примена на напредни јазични конструкции."
+  ],
+  "outline": [
+    "Итератори и генератори",
+    "Декоратори",
+    "Типизација"
+  ]
+}

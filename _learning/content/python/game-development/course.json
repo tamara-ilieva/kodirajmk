@@ -1,0 +1,18 @@
+{
+  "slug": "game-development",
+  "title": "Python Game Development",
+  "description": "Изработка на игри со Python.",
+  "order": 7,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Изработка на игра со интеракција и правила."
+  ],
+  "outline": [
+    "Играчки циклус",
+    "Влез и графика",
+    "Проект"
+  ]
+}

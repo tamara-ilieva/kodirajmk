@@ -1,0 +1,6 @@
+# Source Markdown, drafts, templates, and build tools are excluded from Pages.
+exclude:
+  - _learning
+  - CONTENT_AUTHORING.md
+  - .venv
+  - .idea

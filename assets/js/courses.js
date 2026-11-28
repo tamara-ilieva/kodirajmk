@@ -42,5 +42,5 @@
     if (firstRun) window.umami?.track("course_preview_run");
   });
   host.append(element("h2", "Преглед на код"), pre, button, result);
-  document.querySelector("#planned-courses").append(...courses.map((course) => element("li", course)));
+  document.querySelector("#planned-courses")?.append(...courses.map((course) => element("li", course)));
 })();

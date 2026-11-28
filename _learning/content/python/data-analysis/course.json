@@ -1,0 +1,18 @@
+{
+  "slug": "data-analysis",
+  "title": "Python for Data Analysis",
+  "description": "Обработка, анализа и визуелизација на податоци.",
+  "order": 5,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Подготовка и анализа на табеларни податоци."
+  ],
+  "outline": [
+    "Подготовка на податоци",
+    "Анализа",
+    "Визуелизација"
+  ]
+}

@@ -31,8 +31,6 @@
 .matrix-rain span { white-space:pre; font:.8rem/1.4 var(--mono); animation:secret-rain var(--fall-time) linear var(--delay) infinite; }
 .matrix-mode .secret-mascot:not(.snake-mascot)::after { content:""; position:absolute; top:42%; left:27%; width:46%; height:5px; background:#182417; border-inline:1px solid #547653; }
 @keyframes secret-rain { from { transform:translateY(-65%); } to { transform:translateY(105%); } }
-:root[data-theme="retro"] { --paper:#202321; --ink:#c2f0a7; --green:#abe58d; --muted:#afd1a1; --line:#566a52; }
-[data-theme="retro"] body::after { content:""; position:fixed; inset:0; z-index:5; pointer-events:none; background:repeating-linear-gradient(transparent 0 3px, #00000018 3px 4px); }
 [data-theme="retro"] .secret-mascot img, [data-theme="retro"] .room-frog, [data-theme="retro"] .frog-404 { filter:grayscale(1) sepia(1) hue-rotate(55deg) saturate(1.4); }
 .bug-panel, .snake-game { margin-block:2rem; padding-block:1rem; border-block:1px solid var(--line); }
 .bug-swarm { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:.45rem; margin:.8rem 0; }

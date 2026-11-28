@@ -1,0 +1,18 @@
+{
+  "slug": "data-structures-algorithms",
+  "title": "Data Structures & Algorithms",
+  "description": "Структури на податоци и анализа на алгоритми.",
+  "order": 3,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Избор на структури и споредба на алгоритми."
+  ],
+  "outline": [
+    "Сложеност",
+    "Структури на податоци",
+    "Пребарување и сортирање"
+  ]
+}

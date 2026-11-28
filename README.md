@@ -1,6 +1,6 @@
 # kodiraj.mk
 
-Coming Soon v2.0 for a free Macedonian programming and technology initiative. The site uses plain HTML, CSS, and JavaScript. It has no build step, backend, accounts or analytics.
+Coming Soon v2.0 for a free Macedonian programming and technology initiative. The site is served as plain HTML, CSS, and JavaScript. The Python learning pages are generated locally from Markdown and metadata.
 
 ## Run locally
 
@@ -9,7 +9,8 @@ Serve the repository root over HTTP so the daily challenge page can fetch its JS
 ## Site structure
 
 - `index.html` keeps the original landing page and Frog Jump. `games.html` is the catalogue for Frog Jump, Pixel Pairs and Lily Trail.
-- `python/`, `cpp/`, `ai/`, `cybersecurity/`, `web/` and `sql/` share previews and planned course lists from `assets/js/courses.js`. Run produces predefined output. The Web preview creates its result from fixed DOM elements.
+- `python/` is the course catalog and learning area. See [CONTENT_AUTHORING.md](CONTENT_AUTHORING.md) to edit source content and regenerate pages.
+- `cpp/`, `ai/`, `cybersecurity/`, `web/` and `sql/` share previews and planned course lists from `assets/js/courses.js`. Run produces predefined output. The Web preview creates its result from fixed DOM elements.
 - `terminal/` is a fictional terminal. Its command allowlist is in `assets/js/terminal.js`. Use ↑ / ↓ for history and Tab for completion. Escape moves focus out of the input.
 - `quiz/` contains a 12-question quiz. Scoring, profile descriptions and PNG result cards live in `assets/js/quiz.js`. Each answer scores one point. Ties go to the most recently selected profile among the leaders.
 - `challenges/` loads `assets/data/challenges.json`. Keep IDs stable and `correct` set to the zero-based option index. The daily challenge uses midnight in North Macedonia and selects an entry by day number modulo bank length. Editing the bank size or order changes assignments for uncompleted days. The first submitted answer counts as completion, regardless of correctness. The current streak remains active through today if yesterday was completed.

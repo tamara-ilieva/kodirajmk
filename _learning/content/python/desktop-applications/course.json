@@ -1,0 +1,18 @@
+{
+  "slug": "desktop-applications",
+  "title": "Python Desktop Applications",
+  "description": "Развој на десктоп апликации со Python.",
+  "order": 10,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Изработка на десктоп апликација со графички интерфејс."
+  ],
+  "outline": [
+    "Графички интерфејси",
+    "Настани",
+    "Пакување"
+  ]
+}

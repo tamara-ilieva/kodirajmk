@@ -1,0 +1,18 @@
+{
+  "slug": "ai-ml",
+  "title": "Python for AI & ML",
+  "description": "Работа со модели за машинско учење.",
+  "order": 6,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals и основи на статистика"
+  ],
+  "outcomes": [
+    "Обучување и оценување модели."
+  ],
+  "outline": [
+    "Податоци",
+    "Обучување",
+    "Оценување"
+  ]
+}

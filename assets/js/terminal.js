@@ -37,7 +37,7 @@
   function go(key) { window.location.assign(url(key)); }
   const routesList = Object.values(routes).map(([, path]) => "/" + path).join("  ");
   const demos = {
-    help: () => print(names.join(", ") + "\nПример: cd /python/ · theme"),
+    help: () => print(names.join(", ") + "\nПример: cd /python/ · theme dark · theme light"),
     ls: () => print(routesList),
     cd: (argument) => {
       if (!argument) { print("Наведи страница. Пример: cd /python/"); return; }
@@ -56,9 +56,9 @@
     },
     joke: () => print("Зошто жабата го прочита кодот двапати? Првиот пат ги прескокна баговите."),
     theme: (argument) => {
-      if (!argument) { print("Тековна тема: " + document.documentElement.dataset.theme + " · theme light ја враќа светлата тема."); return; }
-      if (!["light", "retro"].includes(argument)) { print("Непозната тема. Напиши theme за помош."); return; }
-      print("Тема: " + theme(argument));
+      if (!argument) { print("Тековна тема: " + document.documentElement.dataset.theme + " · theme dark за темна тема · theme light за светла тема."); return; }
+      if (!["light", "dark", "retro"].includes(argument)) { print("Непозната тема. Напиши theme за помош."); return; }
+      print("Тема: " + theme(argument === "dark" ? "retro" : argument));
     },
     history: () => print(commands.map((command, index) => (index + 1) + "  " + command).join("\n")),
     clear: () => output.replaceChildren(),

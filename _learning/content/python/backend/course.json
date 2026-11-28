@@ -1,0 +1,18 @@
+{
+  "slug": "backend",
+  "title": "Python Backend Development",
+  "description": "Развој на серверски апликации со Python.",
+  "order": 4,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Изработка на серверска апликација со база на податоци."
+  ],
+  "outline": [
+    "HTTP и API",
+    "Бази на податоци",
+    "Тестирање"
+  ]
+}

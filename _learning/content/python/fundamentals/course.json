@@ -1,0 +1,14 @@
+{
+  "slug": "fundamentals",
+  "title": "Python Fundamentals",
+  "description": "Основи на програмирање со Python.",
+  "order": 1,
+  "status": "available",
+  "prerequisites": [
+    "Не е потребно претходно искуство."
+  ],
+  "outcomes": [
+    "Пишување и тестирање самостојни Python програми."
+  ],
+  "outline": []
+}

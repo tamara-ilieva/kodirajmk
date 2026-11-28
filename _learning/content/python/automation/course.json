@@ -1,0 +1,18 @@
+{
+  "slug": "automation",
+  "title": "Python Automation",
+  "description": "Автоматизација на повторливи задачи.",
+  "order": 8,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Изработка на скрипти за автоматизација."
+  ],
+  "outline": [
+    "Датотеки",
+    "Обработка на податоци",
+    "Закажување задачи"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "practice",
+  "title": "Python Practice",
+  "description": "Практична примена на знаењата по Python.",
+  "order": 11,
+  "status": "coming-soon",
+  "prerequisites": [
+    "Python Fundamentals"
+  ],
+  "outcomes": [
+    "Решавање и проверка на самостојни задачи."
+  ],
+  "outline": [
+    "Кратки задачи",
+    "Практични вежби",
+    "Проекти"
+  ]
+}
